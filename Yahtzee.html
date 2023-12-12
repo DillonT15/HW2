@@ -50,6 +50,9 @@ button.b{
     var v = new Array(0,0,0,0,0);
     var h = new Array(false, false, false, false, false); //not clicked condition
     var f = new Array(0,0,0,0,0,0,0); // f[1] and how many 1's are in it
+    //created a new array c, to check if all of the results are either clicked or unclicked
+    //false means unclicked, true means clicked, just a way to lock in the answers
+    var c = new Array(false, false, false, false, false, false, false, false, false);
 
     function roll(){
         f[1]=f[2]=f[3]=f[4]=f[5]=f[6]= 0;
@@ -65,12 +68,10 @@ button.b{
             f[v[i]]++;
         }
         //calling of scr to update each value
-        scr(1);
-        scr(2);
-        scr(3);
-        scr(4);
-        scr(5);
-        scr(6);
+        
+        
+        
+        
     }
     
     function hold(i)
@@ -85,13 +86,82 @@ button.b{
         }
         
     }
+    //function for finding three of a kind
+    function threeofkind(){
+        //if unclicked
+        if(!c[7]){
+        //variable sum to calculate result
+        var sum = 0;
+        //goes through array f, which contains how many of a certain number is in it
+        for(var i = 0; i < 7; i++){
+            //if any of those variables in f are 3 or higher, calculate sum
+            if(f[i] >= 3){
+                sum = 5;
+            }
+        }
+        //three of a kind is set to s7, goes to s7 and changes innerhtml to the calculated sum
+        d=document.getElementById("s7");
+        d.innerHTML = sum;
+    }
+    }
+    
+    //the functions four of a kind and yahtzee are the same as threeofkind
+    //only difference is in if statement where it checks if there are 4 or more of the same number (through array f)
+    //set to s8
+    function fourofkind(){
+        if(!c[8]){
+        var sum = 0;
+        for(var i = 0; i < 7; i++){
+            if(f[i] >= 4){
+                sum = 10;
+            }
+        }
+        d=document.getElementById("s8");
+        d.innerHTML = sum;
+    }
+    }
+    //set as s9
+    function yahtzee(){
+        if(!c[9]){
+        var sum = 0;
+        for(var i = 0; i < 7; i++){
+            if(f[i] >= 5){
+                sum = 20;
+            }
+        }
+        d=document.getElementById("s9");
+        d.innerHTML = sum;
+    }
+    }
 
     function scr(i)
     {
+        //added if statement to check if result is unclicked
+        if(!c[i]){
         d=document.getElementById("s" + i);
         d.innerHTML = f[i];
+        }
+           
+    }
+
+    //function for when mouse is no longer hovering over result, hiding it
+    function offscr(i){
+        //if result is unclicked
+        if(!c[i]){
+        d=document.getElementById("s" + i);
+        d.innerHTML = "";
+        }
+    }
+
+    //called if result is clicked using onClick below, locking it in place
+    //unable to unlock result after clicked, its permanent unless game is reset
+    function clickscr(i){
+        if(!c[i]){
+        c[i] = true;
+        }
         
-       
+
+
     }
     //function for the new game button to reset the game
     function newGame()
@@ -107,6 +177,8 @@ button.b{
         d=document.getElementById("s" + i);
         d.innerHTML = "";
        }
+       //resets all values of array c to false (c is the array where if clicked lock in result)
+
     }
     
   
@@ -130,21 +202,24 @@ button.b{
 <br><br>
 
 <table class = "t">
-<tr><td class = "a"> 1's</td> <td class = "b" id="s1"> </td> </td> 
+<!--added onmouseover for when mouse is hovering over each result value, calling scr and displaying result-->
+<!--added onmouseout for when mouse is no longer hovering each result, calls offscr which sets variable to empty string-->
+<!--added onClick for when result is clicked, permanently locking in the result until new game is selected -->
+<tr><td class = "a"> 1's</td> <td class = "b" id="s1" onmouseover = "scr(1)" onmouseout = "offscr(1)" onClick = "clickscr(1)" > </td> </td> 
     
     <td class = "c" rowspan="5"> <button class = "b" onClick = "roll()"> Roll </button></td> </tr>
 
-<tr><td class = "a"> 2's</td> <td class = "b" id="s2"> </td></tr>
-<tr><td class = "a"> 3's</td> <td class = "b" id="s3"> </td></tr>
-<tr><td class = "a"> 4's</td> <td class = "b" id="s4"> </td></tr>
-<tr><td class = "a"> 5's</td> <td class = "b" id="s5"> </td></tr>
-<tr><td class = "a"> 6's</td> <td class = "b" id="s6"> </td>
+<tr><td class = "a"> 2's</td> <td class = "b" id="s2" onmouseover = "scr(2)" onmouseout = "offscr(2)" onClick = "clickscr(2)"> </td></tr>
+<tr><td class = "a"> 3's</td> <td class = "b" id="s3" onmouseover = "scr(3)" onmouseout = "offscr(3)" onClick = "clickscr(3)"> </td></tr>
+<tr><td class = "a"> 4's</td> <td class = "b" id="s4" onmouseover = "scr(4)" onmouseout = "offscr(4)" onClick = "clickscr(4)"> </td></tr>
+<tr><td class = "a"> 5's</td> <td class = "b" id="s5" onmouseover = "scr(5)" onmouseout = "offscr(5)" onClick = "clickscr(5)"> </td></tr>
+<tr><td class = "a"> 6's</td> <td class = "b" id="s6" onmouseover = "scr(6)" onmouseout = "offscr(6)" onClick = "clickscr(6)"> </td>
     
     <td class = "c" rowspan="5"> <button class = "c" onClick = "newGame()">New Game </button></td> </tr>
-
-<tr><td class = "a"> 3 of a kind</td> <td class = "b"> </td></tr>
-<tr><td class = "a"> 4 of a kind</td> <td class = "b"> </td></tr>
-<tr><td class = "a"> Yahtzee </td> <td class = "b"> </td></tr>
+<!-- same additions to the next results, set them to s7- s9 and instead called their own specific function to calculate-->
+<tr><td class = "a"> 3 of a kind</td> <td class = "b" id = "s7" onmouseover = "threeofkind()" onmouseout = "offscr(7)" onClick = "clickscr(7)" > </td></tr>
+<tr><td class = "a"> 4 of a kind</td> <td class = "b" id = "s8" onmouseover = "fourofkind()" onmouseout = "offscr(8)" onClick = "clickscr(8)" > </td></tr>
+<tr><td class = "a"> Yahtzee </td> <td class = "b" id = "s9" onmouseover = "yahtzee()" onmouseout = "offscr(9)" onClick = "clickscr(9)"> </td></tr>
 <tr><td class = "a"> Total </td> <td class = "b"> </td></tr>
 </table>
 </body>
@@ -152,5 +227,3 @@ button.b{
 
 
 
-
-</html>
