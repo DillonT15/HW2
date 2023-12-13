@@ -50,11 +50,19 @@ button.b{
     var v = new Array(0,0,0,0,0);
     var h = new Array(false, false, false, false, false); //not clicked condition
     var f = new Array(0,0,0,0,0,0,0); // f[1] and how many 1's are in it
+
+
     //created a new array c, to check if all of the results are either clicked or unclicked
     //false means unclicked, true means clicked, just a way to lock in the answers
-    var c = new Array(false, false, false, false, false, false, false, false, false);
+    var c = new Array(false, false, false, false, false, false, false, false, false,false,false);
+
+    //score variable for final score at bottom
+    var score = 0;
+
+    
 
     function roll(){
+        
         f[1]=f[2]=f[3]=f[4]=f[5]=f[6]= 0;
         
 
@@ -67,12 +75,13 @@ button.b{
             }
             f[v[i]]++;
         }
-        //calling of scr to update each value
         
         
         
         
-    }
+        
+    
+}
     
     function hold(i)
     {
@@ -89,31 +98,45 @@ button.b{
     //function for finding three of a kind
     function threeofkind(){
         //if unclicked
+        var check = false;
         if(!c[7]){
-        //variable sum to calculate result
+
         var sum = 0;
-        //goes through array f, which contains how many of a certain number is in it
+        
         for(var i = 0; i < 7; i++){
-            //if any of those variables in f are 3 or higher, calculate sum
             if(f[i] >= 3){
-                sum = 5;
+                check = true;
+            }   
+        }
+        if(check){
+            for(var j = 0; j < 5; j++){
+                sum += v[j];
             }
         }
-        //three of a kind is set to s7, goes to s7 and changes innerhtml to the calculated sum
         d=document.getElementById("s7");
         d.innerHTML = sum;
     }
-    }
+}
+    
     
     //the functions four of a kind and yahtzee are the same as threeofkind
     //only difference is in if statement where it checks if there are 4 or more of the same number (through array f)
     //set to s8
+
     function fourofkind(){
+          var check = false;
         if(!c[8]){
+
         var sum = 0;
+        
         for(var i = 0; i < 7; i++){
             if(f[i] >= 4){
-                sum = 10;
+                check = true;
+            }   
+        }
+        if(check){
+            for(var j = 0; j < 5; j++){
+                sum += v[j];
             }
         }
         d=document.getElementById("s8");
@@ -121,12 +144,21 @@ button.b{
     }
     }
     //set as s9
+
     function yahtzee(){
+        var check = false;
         if(!c[9]){
+
         var sum = 0;
+        
         for(var i = 0; i < 7; i++){
             if(f[i] >= 5){
-                sum = 20;
+                check = true;
+            }   
+        }
+        if(check){
+            for(var j = 0; j < 5; j++){
+                sum += v[j];
             }
         }
         d=document.getElementById("s9");
@@ -134,12 +166,17 @@ button.b{
     }
     }
 
+    function total(){
+        d=document.getElementById("s10");
+        d.innerHTML = score;
+    }
+
     function scr(i)
     {
         //added if statement to check if result is unclicked
         if(!c[i]){
         d=document.getElementById("s" + i);
-        d.innerHTML = f[i];
+        d.innerHTML = f[i] *i;
         }
            
     }
@@ -158,14 +195,25 @@ button.b{
     function clickscr(i){
         if(!c[i]){
         c[i] = true;
+        d=document.getElementById("s" + i);
+        score += parseInt(d.innerHTML);
         }
         
 
-
+    }
+    //function for specifically the total
+    //once total is clicked using final click, lock all of the other values in c[] as true
+    //meaning you can no longer select or see any more answers
+    function finalclick(){
+        for(var i = 1; i < 11; i++){
+            c[i] = true;
+        }
     }
     //function for the new game button to reset the game
     function newGame()
     {
+        //resets final score to 0
+        score = 0;
         //goes through for loop through 5 values to reset hold status and each image for the dice
        for(var i = 0; i < 5; i++){
         h[i] = false;
@@ -173,10 +221,14 @@ button.b{
         d.src = "pix/dice0.gif";
        }
        //Copy of src function, instead loop through all scores and reset them to a blank string
-       for(var i = 1; i<= 6; i++){
+       for(var i = 1; i<= 10; i++){
         d=document.getElementById("s" + i);
         d.innerHTML = "";
        }
+
+       for(var i = 1; i < 11; i++){
+            c[i] = false;
+        }
        //resets all values of array c to false (c is the array where if clicked lock in result)
 
     }
@@ -220,7 +272,7 @@ button.b{
 <tr><td class = "a"> 3 of a kind</td> <td class = "b" id = "s7" onmouseover = "threeofkind()" onmouseout = "offscr(7)" onClick = "clickscr(7)" > </td></tr>
 <tr><td class = "a"> 4 of a kind</td> <td class = "b" id = "s8" onmouseover = "fourofkind()" onmouseout = "offscr(8)" onClick = "clickscr(8)" > </td></tr>
 <tr><td class = "a"> Yahtzee </td> <td class = "b" id = "s9" onmouseover = "yahtzee()" onmouseout = "offscr(9)" onClick = "clickscr(9)"> </td></tr>
-<tr><td class = "a"> Total </td> <td class = "b"> </td></tr>
+<tr><td class = "a"> Total </td> <td class = "b" id = "s10" onmouseover = "total()" onmouseout = "offscr(10)" onClick = "finalclick()"> </td></tr>
 </table>
 </body>
 
