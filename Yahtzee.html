@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<!-- Dillon Tall, 11/30/23, CSC235, HOMEWORK 2-->
+<!--Name: Dillon Tall	
+Course:	235.01
+HomeWork:	#2 Yahtzee
+Git-Hub:	https://github.com/DillonT15/HW2
+-->	
 <html>
 <head><title>Yahtzee</title>
 <style type = "text/css">
@@ -20,9 +24,13 @@ td.b{
     border:2px #efefef groove; 
     background-color:#AEAFFF;
     width:2em;
-
-
 }
+td.a{
+    font-weight: bold;
+    text-align: right;
+}
+
+
 td.c{
     text-align: right;
     width:100px;
@@ -32,7 +40,11 @@ button.b{
     background-color: #5F00CA;
     margin-right:20px;
 }
-
+button.c{
+    border:1.5px #676c6e;
+    background-color: #b1bfbf;
+    color: #273152;
+}
 
 </style>
 
@@ -46,7 +58,7 @@ button.b{
 <body>
 
 <script language = "JavaScript">
-<!--
+
     var v = new Array(0,0,0,0,0);
     var h = new Array(false, false, false, false, false); //not clicked condition
     var f = new Array(0,0,0,0,0,0,0); // f[1] and how many 1's are in it
@@ -58,11 +70,13 @@ button.b{
 
     //score variable for final score at bottom
     var score = 0;
-
+    //counter for rolls
+    var rolls = 0;
     
 
     function roll(){
         
+        if(rolls < 3){
         f[1]=f[2]=f[3]=f[4]=f[5]=f[6]= 0;
         
 
@@ -75,14 +89,16 @@ button.b{
             }
             f[v[i]]++;
         }
-        
+        //adds 1 to rolls, allows 2 more after inital roll
+        rolls++;
+    }
         
         
         
         
     
 }
-    
+    //holding dice function
     function hold(i)
     {
         d=document.getElementById("d" + i);
@@ -97,22 +113,26 @@ button.b{
     }
     //function for finding three of a kind
     function threeofkind(){
-        //if unclicked
+        //check variable for for loop
         var check = false;
+        //if unclicked
         if(!c[7]){
 
         var sum = 0;
-        
+        //for loop goes through all f[] values, if any value is 3 or higher, make check true
         for(var i = 0; i < 7; i++){
             if(f[i] >= 3){
                 check = true;
             }   
         }
+        //if the check became true, then calculate three of a kind
         if(check){
+            //simply adds all dice values in array v[] for the sum
             for(var j = 0; j < 5; j++){
                 sum += v[j];
             }
         }
+        //set s7's (which is three of a kind's id) inner html to sum
         d=document.getElementById("s7");
         d.innerHTML = sum;
     }
@@ -120,8 +140,8 @@ button.b{
     
     
     //the functions four of a kind and yahtzee are the same as threeofkind
-    //only difference is in if statement where it checks if there are 4 or more of the same number (through array f)
-    //set to s8
+    //only difference is in the if statement where it checks if there are 4 or more of the same number (through array f)
+    //four of a kind set as id s8
 
     function fourofkind(){
           var check = false;
@@ -143,8 +163,8 @@ button.b{
         d.innerHTML = sum;
     }
     }
-    //set as s9
 
+    //yahtzee set as id s9
     function yahtzee(){
         var check = false;
         if(!c[9]){
@@ -165,7 +185,7 @@ button.b{
         d.innerHTML = sum;
     }
     }
-
+    //total set as id s10
     function total(){
         d=document.getElementById("s10");
         d.innerHTML = score;
@@ -176,7 +196,7 @@ button.b{
         //added if statement to check if result is unclicked
         if(!c[i]){
         d=document.getElementById("s" + i);
-        d.innerHTML = f[i] *i;
+        d.innerHTML = f[i] * i;
         }
            
     }
@@ -185,6 +205,7 @@ button.b{
     function offscr(i){
         //if result is unclicked
         if(!c[i]){
+            //set id to blank string
         d=document.getElementById("s" + i);
         d.innerHTML = "";
         }
@@ -195,41 +216,51 @@ button.b{
     function clickscr(i){
         if(!c[i]){
         c[i] = true;
+        //also adds the i value to score
         d=document.getElementById("s" + i);
+        //uses the parseInt to convert the innerHTML into a integer that can be added to score
         score += parseInt(d.innerHTML);
         }
         
 
     }
-    //function for specifically the total
+
+    //function specifically for the total
     //once total is clicked using final click, lock all of the other values in c[] as true
-    //meaning you can no longer select or see any more answers
+    //meaning you can no longer select or see any more answers, game is now over
     function finalclick(){
         for(var i = 1; i < 11; i++){
             c[i] = true;
         }
     }
-    //function for the new game button to reset the game
+
+
+
+    //function for the new game button to reset the game and all previous  values
     function newGame()
     {
-        //resets final score to 0
+        //reset score and # of rolls to 0
         score = 0;
+        rolls = 0;
+
         //goes through for loop through 5 values to reset hold status and each image for the dice
        for(var i = 0; i < 5; i++){
         h[i] = false;
         d=document.getElementById("d"+i);
         d.src = "pix/dice0.gif";
        }
-       //Copy of src function, instead loop through all scores and reset them to a blank string
+
+       //same as src function, instead loop through all scores and reset them to a blank string
+       //resets all values of array c to false (c is the array where if clicked lock in result)
        for(var i = 1; i<= 10; i++){
         d=document.getElementById("s" + i);
         d.innerHTML = "";
+        c[i] = false;
        }
-
-       for(var i = 1; i < 11; i++){
-            c[i] = false;
-        }
-       //resets all values of array c to false (c is the array where if clicked lock in result)
+       //For loop for resetting all values in array f[]
+       for(var i = 0; i < 7; i++){
+         f[i] = 0;
+       }
 
     }
     
@@ -238,7 +269,7 @@ button.b{
     
     
 
--->
+
 
 </script>
 
@@ -268,7 +299,7 @@ button.b{
 <tr><td class = "a"> 6's</td> <td class = "b" id="s6" onmouseover = "scr(6)" onmouseout = "offscr(6)" onClick = "clickscr(6)"> </td>
     
     <td class = "c" rowspan="5"> <button class = "c" onClick = "newGame()">New Game </button></td> </tr>
-<!-- same additions to the next results, set them to s7- s9 and instead called their own specific function to calculate-->
+<!-- same additions to the next results, set them to s7- s10 and instead called their own specific function to calculate-->
 <tr><td class = "a"> 3 of a kind</td> <td class = "b" id = "s7" onmouseover = "threeofkind()" onmouseout = "offscr(7)" onClick = "clickscr(7)" > </td></tr>
 <tr><td class = "a"> 4 of a kind</td> <td class = "b" id = "s8" onmouseover = "fourofkind()" onmouseout = "offscr(8)" onClick = "clickscr(8)" > </td></tr>
 <tr><td class = "a"> Yahtzee </td> <td class = "b" id = "s9" onmouseover = "yahtzee()" onmouseout = "offscr(9)" onClick = "clickscr(9)"> </td></tr>
